@@ -4,8 +4,8 @@ An opensource Golang Migration tool for gophers! It allows you to easily manage 
 ## 📁 Configuration
 
 To get started, you need to create a configuration file to store your database credentials.
-	1.	Create a directory named config in your application’s root.
-	2.	Inside config, create a file named database.yml with the following structure:
+- Create a directory named config in your application’s root.
+- Inside config, create a file named database.yml with the following structure:
 ```yaml
 host:
 port:
