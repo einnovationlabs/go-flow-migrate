@@ -76,16 +76,16 @@ flow.MigrateDown(step int)
   - step = 3 rolls back the last three migrations.
 
 
-🛡️ Best Practices
+## 🛡️ Best Practices
 	•	Use descriptive names for your migration files (e.g., add users table).
 	•	Test migrations in a staging environment before running them in production.
 	•	Always keep backups of your database before applying significant changes.
 
-💬 Support
+## 💬 Support
 
 For questions or issues, please reach out via GitHub Issues.
 
-⚖️ License
+## ⚖️ License
 
 Flow is open-source software licensed under the MIT License.
 
