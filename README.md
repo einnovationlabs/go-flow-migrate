@@ -77,9 +77,9 @@ flow.MigrateDown(step int)
 
 
 ## 🛡️ Best Practices
-	•	Use descriptive names for your migration files (e.g., add users table).
-	•	Test migrations in a staging environment before running them in production.
-	•	Always keep backups of your database before applying significant changes.
+- Use descriptive names for your migration files (e.g., add users table).
+- Test migrations in a staging environment before running them in production.
+- Always keep backups of your database before applying significant changes.
 
 ## 💬 Support
 
