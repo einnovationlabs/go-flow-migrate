@@ -19,7 +19,7 @@ Add go-flow-migrate to your project using go get:
 ```go
 go get github.com/einnovationlabs/go-flow-migrate@v1.0.0
 ```
-## Starting the tool
+## 🚦 Starting the Migrator
 ```go
 flow.Start()
 ```
