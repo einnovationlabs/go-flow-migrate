@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func Start() {
+func Start(directory string) {
 	logInfo(`Welcome to flow migrate.
 1. Create a migration file
 2. Run Migrations
@@ -18,16 +18,16 @@ func Start() {
 	switch choice {
 	case "1":
 		file_name := readInput("Enter Migration file name: ")
-		Create(file_name)
+		Create(file_name, directory)
 	case "2":
-		MigrateUp()
+		MigrateUp(directory)
 	case "3":
 		step := readInput("Enter step count(int): ")
 		step_int, err := strconv.Atoi(step)
 		if err != nil {
 			log.Fatalf("ERROR: Invalid input. try again")
 		}
-		MigrateDown(step_int)
+		MigrateDown(step_int, directory)
 	default:
 		logInfo("Invalid choice. Please select a valid option (1, 2, or 3).")
 	}
@@ -46,18 +46,18 @@ func readInput(display string) string {
 	return input
 }
 
-func MigrateUp() {
-	db := ReadDatabaseConfiguration()
+func MigrateUp(directory string) {
+	db := ReadDatabaseConfiguration(directory)
 	db.Connect()
 	db.RunMigrations("up", 0)
 }
 
-func MigrateDown(step int) {
-	db := ReadDatabaseConfiguration()
+func MigrateDown(step int, directory string) {
+	db := ReadDatabaseConfiguration(directory)
 	db.Connect()
 	db.RunMigrations("down", step)
 }
 
-func Create(migration_name string) {
-	createMigrationFile(migration_name)
+func Create(migration_name string, directory string) {
+	createMigrationFile(migration_name, directory)
 }

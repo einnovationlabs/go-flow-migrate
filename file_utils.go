@@ -11,8 +11,8 @@ import (
 )
 
 // Reading migration files
-func readMigrationFiles() map[int]Migration {
-	dir := "./migrations"
+func readMigrationFiles(directory string) map[int]Migration {
+	dir := filepath.Join(directory, "migrations")
 
 	files, err := os.ReadDir(dir)
 	if err != nil {
@@ -55,11 +55,11 @@ func migrationFromFile(filePath string) (Migration, error) {
 }
 
 // Creating Migration files
-func createMigrationFile(migration_name string) {
+func createMigrationFile(migration_name string, directory string) {
 	currentTime := time.Now()
 	version := strings.ReplaceAll(currentTime.Format("20060102150405.000"), ".", "")
 
-	dir := "./migrations"
+	dir := filepath.Join(directory, "migrations")
 	migration_name = strings.Join(strings.Fields(migration_name), "_")
 	fileName := version + "_" + strings.ToLower(migration_name) + ".yml"
 
@@ -73,7 +73,7 @@ func createMigrationFile(migration_name string) {
 
 func createFileInDir(dir, fileName, migration_name, version string) {
 	// Create the full path for the new file
-	filePath := fmt.Sprintf("%s/%s", dir, fileName)
+	filePath := filepath.Join(dir, fileName)
 
 	// Create the file
 	file, err := os.Create(filePath)

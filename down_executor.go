@@ -11,7 +11,7 @@ func (db DB) executeDownMigrationScript(step int) {
 	query := func(tx *sql.Tx) error {
 		var err error
 		var message string
-		migrations := readMigrationFiles()
+		migrations := readMigrationFiles(db.Directory)
 		migratedVersions := fetchMigratedVersions(tx)
 
 		slices.Reverse(migratedVersions)

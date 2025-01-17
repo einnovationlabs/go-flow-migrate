@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	_ "github.com/lib/pq"
 	"gopkg.in/yaml.v3"
@@ -15,12 +16,14 @@ type DB struct {
 	User       string `yaml:"user"`
 	Password   string `yaml:"password"`
 	DBName     string `yaml:"dbname"`
+	Directory  string
 	Connection *sql.DB
 }
 
 // reads the database credentials from config/database.yml
-func ReadDatabaseConfiguration() *DB {
-	file, err := os.Open("config/database.yml")
+func ReadDatabaseConfiguration(directory string) *DB {
+	dir := filepath.Join(directory, "database.yml")
+	file, err := os.Open(dir)
 	if err != nil {
 		checkError(err, "FATAL: error opening YAML file: - %v\n")
 	}
@@ -35,7 +38,7 @@ func ReadDatabaseConfiguration() *DB {
 	if err != nil {
 		checkError(err, "FATAL: error decoding YAML file: - %v\n")
 	}
-
+	config.Directory = directory
 	return &config
 }
 

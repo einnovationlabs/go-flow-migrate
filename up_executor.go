@@ -10,7 +10,7 @@ func (db DB) executeUpMigrationScript() {
 	query := func(tx *sql.Tx) error {
 		var err error
 		var message string
-		migrations := readMigrationFiles()
+		migrations := readMigrationFiles(db.Directory)
 		migratedVersions := fetchMigratedVersions(tx)
 
 		for _, version := range migratedVersions {
