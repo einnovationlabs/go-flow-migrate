@@ -2,51 +2,61 @@ package flow
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
+	"log"
 	"os"
-	"path/filepath"
+	"strconv"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
-	"gopkg.in/yaml.v3"
 )
 
 type DB struct {
-	Host       string `yaml:"host"`
-	Port       int    `yaml:"port"`
-	User       string `yaml:"user"`
-	Password   string `yaml:"password"`
-	DBName     string `yaml:"dbname"`
+	Host       string
+	Port       string
+	User       string
+	Password   string
+	DBName     string
 	Directory  string
 	Connection *sql.DB
 }
 
 // reads the database credentials from config/database.yml
 func ReadDatabaseConfiguration(directory string) *DB {
-	dir := filepath.Join(directory, "database.yml")
-	file, err := os.Open(dir)
-	if err != nil {
-		checkError(err, "FATAL: error opening YAML file: - %v\n")
+	godotenv.Load()
+
+	config := DB{
+		Host:     getEnv("DB_HOST"),
+		Port:     getEnv("DB_PORT"),
+		User:     getEnv("DB_USER"),
+		Password: getEnv("DB_PASSWORD"),
+		DBName:   getEnv("DB_NAME"),
 	}
 
-	defer file.Close()
-
-	var config DB
-
-	// Parse the YAML data into the struct
-	decoder := yaml.NewDecoder(file)
-	err = decoder.Decode(&config)
-	if err != nil {
-		checkError(err, "FATAL: error decoding YAML file: - %v\n")
-	}
-	config.Directory = directory
 	return &config
+}
+
+func getEnv(key string) string {
+	if value := os.Getenv(key); value != "" {
+		return value
+	}
+
+	err := errors.New(key)
+	checkError(err, "Fatal: Failed to fetch credentials - %v\n")
+	return ""
 }
 
 // Connect establishes and returns a PostgreSQL DB instance
 func (d *DB) Connect() {
+	portInt, err := strconv.Atoi(d.Port)
+	if err != nil {
+		log.Fatalf("Invalid port: %v", err)
+	}
+
 	psqlconn := fmt.Sprintf(
 		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		d.Host, d.Port, d.User, d.Password, d.DBName,
+		d.Host, portInt, d.User, d.Password, d.DBName,
 	)
 
 	db, err := sql.Open("postgres", psqlconn)
