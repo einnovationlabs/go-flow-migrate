@@ -3,21 +3,21 @@ An opensource Golang Migration tool for gophers! It allows you to easily manage 
 
 ## 📁 Configuration
 
-To get started, you need to create a configuration file to store your database credentials.
-- Create a directory named config in your application’s root.
-- Inside config, create a file named database.yml with the following structure:
+To get started, you need to create a .env file to store your database credentials.
+- Create a .env file in your application’s root.
+- Inside your .env file set these key value pairs needed for the migrator to run
 ```yaml
-host:
-port:
-user:
-password:
-dbname:
+DB_HOST=
+DB_PORT=
+DB_USER=
+DB_PASSWORD=
+DB_NAME=
 ```
 ## 🚀 Installation
 
 Add go-flow-migrate to your project using go get:
 ```go
-go get github.com/einnovationlabs/go-flow-migrate@v1.0.0
+go get github.com/einnovationlabs/go-flow-migrate
 ```
 ## 🚦 Starting the Migrator
 ```go

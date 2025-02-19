@@ -27,11 +27,12 @@ func ReadDatabaseConfiguration(directory string) *DB {
 	godotenv.Load()
 
 	config := DB{
-		Host:     getEnv("DB_HOST"),
-		Port:     getEnv("DB_PORT"),
-		User:     getEnv("DB_USER"),
-		Password: getEnv("DB_PASSWORD"),
-		DBName:   getEnv("DB_NAME"),
+		Host:      getEnv("DB_HOST"),
+		Port:      getEnv("DB_PORT"),
+		User:      getEnv("DB_USER"),
+		Password:  getEnv("DB_PASSWORD"),
+		DBName:    getEnv("DB_NAME"),
+		Directory: directory,
 	}
 
 	return &config
