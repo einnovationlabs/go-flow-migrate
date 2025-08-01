@@ -19,6 +19,7 @@ type DB struct {
 	Password   string
 	DBName     string
 	Directory  string
+	SSLMode    string
 	Connection *sql.DB
 }
 
@@ -32,6 +33,7 @@ func ReadDatabaseConfiguration(directory string) *DB {
 		User:      getEnv("DB_USER"),
 		Password:  getEnv("DB_PASSWORD"),
 		DBName:    getEnv("DB_NAME"),
+		SSLMode:   getEnv("DB_SSL_MODE"),
 		Directory: directory,
 	}
 
@@ -56,8 +58,8 @@ func (d *DB) Connect() {
 	}
 
 	psqlconn := fmt.Sprintf(
-		"host=%s port=%d user=%s password=%s dbname=%s sslmode=disable",
-		d.Host, portInt, d.User, d.Password, d.DBName,
+		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
+		d.Host, portInt, d.User, d.Password, d.DBName, d.SSLMode,
 	)
 
 	db, err := sql.Open("postgres", psqlconn)
