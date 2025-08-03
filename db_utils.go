@@ -2,10 +2,8 @@ package flow
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"log"
-	"os"
 	"strconv"
 
 	"github.com/joho/godotenv"
@@ -20,6 +18,7 @@ type DB struct {
 	DBName     string
 	Directory  string
 	SSLMode    string
+	Schema     string
 	Connection *sql.DB
 }
 
@@ -28,27 +27,28 @@ func ReadDatabaseConfiguration(directory string) *DB {
 	godotenv.Load()
 
 	config := DB{
-		Host:      getEnv("DB_HOST"),
-		Port:      getEnv("DB_PORT"),
-		User:      getEnv("DB_USER"),
-		Password:  getEnv("DB_PASSWORD"),
-		DBName:    getEnv("DB_NAME"),
-		SSLMode:   getEnv("DB_SSL_MODE"),
+		Host:      getEnvOrDefault("DB_HOST", ""),
+		Port:      getEnvOrDefault("DB_PORT", ""),
+		User:      getEnvOrDefault("DB_USER", ""),
+		Password:  getEnvOrDefault("DB_PASSWORD", ""),
+		DBName:    getEnvOrDefault("DB_NAME", ""),
+		SSLMode:   getEnvOrDefault("DB_SSL_MODE", "disable"),
+		Schema:    getEnvOrDefault("DB_SCHEMA", "public"),
 		Directory: directory,
 	}
 
 	return &config
 }
 
-func getEnv(key string) string {
-	if value := os.Getenv(key); value != "" {
-		return value
-	}
+// func getEnv(key string) string {
+// 	if value := os.Getenv(key); value != "" {
+// 		return value
+// 	}
 
-	err := errors.New(key)
-	checkError(err, "Fatal: Failed to fetch credentials - %v\n")
-	return ""
-}
+// 	err := errors.New(key)
+// 	checkError(err, "Fatal: Failed to fetch credentials - %v\n")
+// 	return ""
+// }
 
 // Connect establishes and returns a PostgreSQL DB instance
 func (d *DB) Connect() {
@@ -58,8 +58,8 @@ func (d *DB) Connect() {
 	}
 
 	psqlconn := fmt.Sprintf(
-		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
-		d.Host, portInt, d.User, d.Password, d.DBName, d.SSLMode,
+		"host=%s port=%d user=%s password=%s dbname=%s sslmode=%s search_path=%s",
+		d.Host, portInt, d.User, d.Password, d.DBName, d.SSLMode, d.Schema,
 	)
 
 	db, err := sql.Open("postgres", psqlconn)
